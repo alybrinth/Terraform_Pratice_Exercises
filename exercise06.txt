@@ -1,0 +1,57 @@
+terraform validate
+Checks whether your Terraform configuration files (.tf) are syntactically correct and internally consistent.
+It verifies things like missing arguments, invalid resource references, or structural issues.
+It does not check against real cloud providers, so it won’t tell you if the values are valid in AWS/Azure/GCP.
+Use this before running a plan to catch basic mistakes early.
+
+terraform fmt
+Automatically formats your .tf files to match Terraform’s standard style conventions.
+By default, it only formats the files in the current working directory.
+Add -recursive to format .tf files inside subfolders too.
+Ensures readability and consistency across teams.
+
+terraform plan
+Creates an execution plan showing what Terraform intends to do in order to match your configuration with the real infrastructure.
+It doesn’t make changes, just a preview.
+It highlights which resources will be created, updated, or destroyed.
+Useful to double-check changes before applying them, especially in production environments.
+
+terraform plan -out <filename>
+Same as terraform plan, but saves the execution plan to a binary file.
+Later you can run terraform apply <filename> to ensure Terraform executes exactly that plan.
+This avoids accidental differences if the environment changes between planning and applying.
+Commonly used in automation pipelines (CI/CD).
+
+terraform apply
+Applies the changes required to reach the desired infrastructure state.
+By default, it will run a plan internally first, then prompt you for confirmation before applying.
+If used with a saved plan file (terraform apply <filename>), it executes exactly what was planned earlier.
+This is the actual “make the changes happen” command.
+
+terraform show
+Displays a human-readable representation of either the current state file or a saved plan file.
+Helps you inspect what resources Terraform is tracking, their attributes, and planned changes.
+Often used for debugging or reviewing details of infrastructure.
+
+terraform state list
+Lists all resources that are currently recorded in Terraform’s state file.
+Useful for understanding what Terraform is managing.
+Can be paired with other state subcommands (like state rm or state mv) to manipulate resources in the state file without touching the real infrastructure.
+Helpful when resources drift or when you import existing infrastructure.
+
+terraform destroy
+Destroys all resources Terraform is managing (everything in the state file).
+Equivalent to running terraform apply with a -destroy flag.
+Use carefully — it will remove infrastructure from your cloud provider.
+Commonly used to clean up test environments or avoid incurring costs.
+
+terraform -help
+Displays the general help for Terraform, including all available commands.
+Can also be used as terraform <command> -help to get detailed help for a specific command (for example terraform plan -help).
+Useful for quickly checking syntax and options without searching online.
+
+Special Notes:
+Always run terraform init at least once in a project before using the above commands; it downloads provider plugins.
+terraform plan and apply depend heavily on the state file — if it’s missing or corrupted, behavior may be unexpected.
+terraform fmt is purely formatting, doesn’t touch the logic.
+terraform validate checks structure, not provider-side correctness.
